@@ -1,11 +1,8 @@
 {
   "dnt_headers": [
-    "color details", 
-    "quantity", 
-    "cost", 
+    "color details",
+    "quantity",
+    "cost",
     "unit of measure"
-  ],
-  "canonical_mapping": {
-    "design pack image": "Graphic Reference"
-  }
+  ]
 }
