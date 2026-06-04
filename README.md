@@ -36,8 +36,8 @@ techpack-translator/
 ├── .dockerignore         # Excludes local data and secrets from build context
 ├── fonts/
 │   └── simhei.ttf        # TrueType font used for rendering CJK characters
-├── input/                # Volume-mounted local directory for source images
-├── output/               # Volume-mounted local directory for translated results
+├── input/                # Volume-mounted local directory for source images (If you want to run this locally, please create the directory)
+├── output/               # Volume-mounted local directory for translated results (If you want to run this locally, please create the directory)
 └── requirements.txt      # Required Python Libraries
 ```
 
