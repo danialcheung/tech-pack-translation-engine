@@ -1,0 +1,25 @@
+# Secrets & Credentials (CRITICAL)
+*.json
+!terms.json
+
+# Local I/O Data
+input/
+output/
+scratch_files/
+*.png
+*.jpg
+*.jpeg
+
+# Python Virtual Environments
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Git history (Docker doesn't need your version control files)
+.git/
+.gitignore
+
+# Docker files (Docker doesn't need to copy its own instructions into the image)
+Dockerfile
+.dockerignore

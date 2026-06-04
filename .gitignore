@@ -1,0 +1,24 @@
+# Secrets & Credentials
+*.json
+!terms.json
+
+# Image Data
+input/
+output/
+scratch_files/
+*.png
+*.jpg
+*.jpeg
+
+# Python Environment
+__pycache__/
+venv/
+env/
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Execution Scripts
+*.bat
