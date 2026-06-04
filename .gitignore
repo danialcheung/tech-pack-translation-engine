@@ -1,6 +1,7 @@
 # Secrets & Credentials
 *.json
 !terms.json
+.env
 
 # Image Data
 scratch_files/
@@ -14,6 +15,7 @@ __pycache__/
 venv/
 env/
 *.pyc
+.pytest_cache/
 
 # OS generated files
 .DS_Store

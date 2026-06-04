@@ -30,15 +30,28 @@ A containerized Python microservice designed to automate the translation of manu
 
 ```text
 techpack-translator/
-├── main.py               # Main pipeline orchestration script
+├── main.py               # Entry point — orchestration, CLI argument parsing
+├── src/                  # Core pipeline modules
+│   ├── __init__.py
+│   ├── models.py         # TextBlock dataclass used across the pipeline
+│   ├── config.py         # JSON config loading, directory resolution
+│   ├── ocr.py            # PaddleOCR extraction + Spatial Guillotine
+│   ├── image_processing.py  # Grid detection, candidate boxes, whiteout & heal
+│   ├── filtering.py      # DNT column detection and block filtering
+│   ├── translation.py    # Google Cloud Translation API wrapper
+│   └── rendering.py      # Font loading + translated text rendering
+├── tests/                # Unit tests (pytest)
+│   ├── test_ocr.py       # Tests for text splitting logic
+│   └── test_filtering.py # Tests for DNT column filtering
 ├── terms.json            # Dynamic configuration dictionary for DNT mapping
-├── Dockerfile            # Production multi-stage Debian-slim environment
+├── .env.example          # Required environment variables template
+├── Dockerfile            # Production Debian-slim container environment
 ├── .dockerignore         # Excludes local data and secrets from build context
 ├── fonts/
 │   └── simhei.ttf        # TrueType font used for rendering CJK characters
-├── input/                # Volume-mounted local directory for source images (If you want to run this locally, please create the directory)
-├── output/               # Volume-mounted local directory for translated results (If you want to run this locally, please create the directory)
-└── requirements.txt      # Required Python Libraries
+├── input/                # Volume-mounted source images (create locally if needed)
+├── output/               # Volume-mounted translated results (create locally if needed)
+└── requirements.txt      # Python dependencies
 ```
 
 ## ⚙️ Configuration (`terms.json`)
@@ -59,13 +72,53 @@ To prevent the engine from translating critical technical data or factory codes,
 
 ## 📦 Prerequisites
 
-* Docker Desktop installed and running.
+* Python 3.10+ (for running locally) **or** Docker Desktop (for containerized execution).
 * An active Google Cloud Project with the **Cloud Translation API** enabled.
 * A service account key JSON file downloaded from Google Cloud IAM.
 
 ---
 
-## ⚙️ Local Deployment & Setup
+## 💻 Running Locally (Without Docker)
+
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Set Environment Variables
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your/service-account-key.json
+export GOOGLE_CLOUD_PROJECT=your-gcp-project-id
+```
+On Windows (PowerShell):
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\your\service-account-key.json"
+$env:GOOGLE_CLOUD_PROJECT="your-gcp-project-id"
+```
+
+### 3. Run the Pipeline
+```bash
+python main.py
+```
+
+Place your source images in `./input/` and translated results will appear in `./output/`.
+
+#### CLI Options
+```bash
+python main.py --target-lang ja         # Translate to Japanese instead of Chinese
+python main.py --input ./my_images      # Custom input directory
+python main.py --output ./results       # Custom output directory
+python main.py --config custom.json     # Custom config file
+```
+
+### 4. Run Tests
+```bash
+python -m pytest tests/ -v
+```
+
+---
+
+## 🐳 Docker Deployment
 
 ### 1. Build the Docker Image
 Navigate to the root directory of your project and run the following command to package the application:
@@ -135,8 +188,8 @@ docker run --rm \
 * **The Constraint:** The deterministic "Spatial Guillotine" is bounded by string-token spacing mechanics; highly non-standard text alignment can occasionally result in a stray word bleeding past a column wall. For enterprise clients, this introduces data alignment and confidentiality concerns if text crosses into protected corridors.
 * **Phase 2 Evolution:** To achieve enterprise-grade security and 100% airtight data isolation, we plan to evaluate migrating the layout and extraction engine to **Azure Document Intelligence (AzureDI) containerized models**, which can be hosted completely locally within a secure private cloud. Furthermore, if a client’s budget supports high-performance compute, we will explore **Vision-Language Models (VLMs)** to perform semantic layout validation prior to API routing.
 
-### 3. Fine-Grained Character Recognition (The Inches `"` Marker)
-* **The Constraint:** Standard PaddleOCR models can occasionally drop or skip fine-grained punctuation, such as the double-quote symbol (`"`) used to denote inches in technical measurements. This can result in structural data losing its unit context.
+### 3. Fine-Grained Character Recognition (The Inches `"` Marker & Colon `:`)
+* **The Constraint:** Standard PaddleOCR models can occasionally drop or skip fine-grained punctuation, such as the double-quote symbol (`"`) used to denote inches in technical measurements, or the colon (`:`) used in label-value pairs. This can result in structural data losing its unit context or misinterpreting field delimiters.
 * **Phase 2 Evolution:** We will address this granular data loss by introducing an **Image Pre-Processing Upscaling Pipeline** (using algorithms like Super-Resolution CNNs or Bilateral Filtering) to maximize character sharpness before OCR execution. Concurrently, migrating to a high-fidelity tabular OCR engine like AzureDI will provide the character-level confidence scores necessary to preserve microscopic engineering markers.
 
 ### 4. Vertical Layout Reading Order & Token Aggregation

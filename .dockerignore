@@ -9,6 +9,7 @@ scratch_files/
 *.png
 *.jpg
 *.jpeg
+algorithm_diagram.png
 
 # Python Virtual Environments
 venv/
@@ -16,10 +17,20 @@ env/
 __pycache__/
 *.pyc
 
-# Git history (Docker doesn't need your version control files)
+# Tests & dev tooling
+tests/
+.pytest_cache/
+.env.example
+
+# Documentation & assets
+README.md
+algorithm_diagram.png
+run.bat
+
+# Git history
 .git/
 .gitignore
 
-# Docker files (Docker doesn't need to copy its own instructions into the image)
+# Docker files
 Dockerfile
 .dockerignore
