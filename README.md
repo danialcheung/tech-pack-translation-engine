@@ -1,6 +1,6 @@
 # Tech Pack Translation Engine
 
-A containerized Python microservice designed to automate the translation of manufacturing tech packs. The engine utilizes **PaddleOCR** and **OpenCV** to extract a document's structural grid, segments key layout components (such as BOM tables and technical design sketches), and applies a dynamic column-filtering mask driven by a runtime JSON configuration. Approved text is routed to the **Google Cloud Translation API** and seamlessly re-rendered onto the document using **PIL (Pillow)** while maintaining pixel-perfect layout and line integrity.
+A containerized Python microservice designed to automate the translation of manufacturing tech packs. The engine utilizes [**PaddleOCR**](https://github.com/PADDLEPADDLE/PADDLEOCR) and [**OpenCV**](https://opencv.org/) to extract a document's structural grid, segments key layout components (such as BOM tables and technical design sketches), and applies a dynamic column-filtering mask driven by a runtime JSON configuration. Approved text is routed to the [**Google Cloud Translation API**](https://docs.cloud.google.com/translate/docs/reference/rest) and seamlessly re-rendered onto the document using [**PIL (Pillow)**](https://pypi.org/project/pillow/) while maintaining pixel-perfect layout and line integrity.
 
 ---
 
