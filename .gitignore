@@ -3,12 +3,11 @@
 !terms.json
 
 # Image Data
-input/
-output/
 scratch_files/
 *.png
 *.jpg
 *.jpeg
+!algorithm_diagram.png
 
 # Python Environment
 __pycache__/
