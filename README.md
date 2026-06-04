@@ -100,7 +100,7 @@ docker run --rm \
 4. **DNT Filtering:** Iterates over row boundaries to locate matching `terms.json` strings and dynamically protects vertical data tunnels.
 5. **Restoration & Localized Rendering:** Overlays an isolated layout grid mask on top of freshly rendered PIL typography to maintain original pixel integrity.
 
-![algorithm diagram]("algorithm_diagram.png")
+![algorithm diagram](algorithm_diagram.png)
 ---
 
 ## 🧠 Challenges & Engineering Solutions
