@@ -4,6 +4,18 @@ A containerized Python microservice designed to automate the translation of manu
 
 ---
 
+## 📌 Table of Contents
+* [🚀 Key Features](#-key-features)
+* [🛠️ Project Structure](#️-project-structure)
+* [⚙️ Configuration (`terms.json`)](#️-configuration-termsjson)
+* [📦 Prerequisites](#-prerequisites)
+* [⚙️ Local Deployment & Setup](#️-local-deployment--setup)
+* [📊 Data Pipeline Flow](#-data-pipeline-flow)
+* [🧠 Challenges & Engineering Solutions](#-challenges--engineering-solutions)
+* [🎯 Production Roadmap: Phase 2 Architecture Evolution](#-production-roadmap-phase-2-architecture-evolution)
+
+---
+
 ## 🚀 Key Features
 
 * **Hybrid-Deterministic Architecture:** Combines deep-learning OCR text extraction with lightweight, high-performance local matrix mathematics.
@@ -106,7 +118,11 @@ docker run --rm \
 
 ### 4. Canvas Restoration: Preserving Structural Grid Integrity
 * **Challenge:** Completely removing the original English text requires clearing the canvas within each bounding box. However, applying a blank white rectangle over the text inevitably erases the underlying cell borders and table lines, leaving the final document looking digitally fractured and unreadable.
-* **Solution:** I implemented a multi-layered image restoration technique. The algorithm first isolates a dedicated pixel mask of the table's structural grid lines before any text clearing occurs. After the English text is masked out and the new translations are rendered on top using PIL, the engine blends the original grid line mask back over
+* **Solution:** I implemented a multi-layered image restoration technique. The algorithm first isolates a dedicated pixel mask of the table's structural grid lines before any text clearing occurs. After the English text is masked out and the new translations are rendered on top using PIL, the engine blends the original grid line mask back over the canvas as a top layer, seamlessly healing all broken line intersections.
+
+### 5. Domain Data Integrity: Mapping Dynamic Industry Terminology
+* **Challenge:** Tech packs contain critical technical specifications (material codes, sizing markers, measurements) that must remain in their native format for production accuracy. Inferring what to protect based on table headers is difficult because terminology varies wildly across factories, and hardcoding these names would make the software fragile and rigid.
+* **Solution:** I decoupled the business logic from the codebase by building a runtime configuration schema (`terms.json`). The engine dynamically matches scanned column headers against this external dictionary. Once a match is locked, it calculates that column's exact horizontal boundaries on the fly, automatically safeguarding all data nested directly beneath it. This shifts terminology control entirely to end-users (product managers or factory teams), who can update vocabulary at any time without needing code redeployments.
 
 ## 🎯 Production Roadmap: Phase 2 Architecture Evolution
 
